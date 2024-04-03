@@ -12,8 +12,8 @@
 #define PCF8574_ADDR 0x27
 #define OLED_ADDR 0x3C
 #define Button_OK 5
-#define Button_UP 4
-#define Button_DOWN 3
+#define Button_UP 3
+#define Button_DOWN 4
 #define Button_RUN 2
 #define Button_PLUS 0
 #define Button_MIN 1
@@ -265,11 +265,11 @@ homeSC:
   while (homeS) {
     headUp(true, false);
     dispSensor(readSensor());
-    if (touchUp(Button_UP)) {
+    if (touchUp(Button_DOWN)) {
       menuHome++;
       if (menuHome > 5) menuHome = 1;
     }
-    if (touchUp(Button_DOWN)) {
+    if (touchUp(Button_UP)) {
       menuHome--;
       if (menuHome == 255) menuHome = 5;
     }

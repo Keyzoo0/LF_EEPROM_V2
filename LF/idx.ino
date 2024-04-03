@@ -235,14 +235,14 @@ void setIDX() {
 
       if (halIdx == 2) {
         headUpIdx(true, false);
-        if (touchUp(Button_DOWN)) {
+        if (touchUp(Button_UP)) {
           if (--selectSet == 255) {
             selectSet = 2;
             menuCount = 0;
             halIdx = 1;
           }
         }
-        if (touchUp(Button_UP)) {
+        if (touchUp(Button_DOWN)) {
           if (++selectSet > 2) {
             selectSet = 1;
             menuCount = 0;
@@ -300,14 +300,14 @@ void setIDX() {
 
       if (halIdx == 3) {
         headUpIdx(true, false);
-        if (touchUp(Button_DOWN)) {
+        if (touchUp(Button_UP)){
           if (--selectSet == 255) {
             selectSet = 2;
             menuCount = 0;
             halIdx = 2;
           }
         }
-        if (touchUp(Button_UP)) {
+        if (touchUp(Button_DOWN)) {
           if (++selectSet > 2) {
             selectSet = 1;
             menuCount = 0;
@@ -407,14 +407,14 @@ void setIDX() {
 
       if (halIdx == 4) {
         headUpIdx(true, false);
-        if (touchUp(Button_DOWN)) {
+        if (touchUp(Button_UP)) {
           if (--selectSet == 255) {
             selectSet = 2;
             menuCount = 0;
             halIdx = 3;
           }
         }
-        if (touchUp(Button_UP)) {
+        if (touchUp(Button_DOWN)) {
           if (++selectSet > 2) {
             selectSet = 2;
             menuCount = 0;
@@ -462,6 +462,7 @@ void setIDX() {
     lcd.display();
   }
 }
+
 
 void menuCheckpoint(){
   while(1){
@@ -608,7 +609,8 @@ void readCounter(byte count) {
 }
 
 void CMIDX() {
-  char modCopy[2][7] = {"NORMAL", "MIRROR"};
+  const char* mode []= { "copy" , "mirror"};
+  char modCopy[2][7] = {"COPY", "MIRROR"};
   byte x1, x2;
   byte selectModeCM = 0;
   byte steps = 0;
@@ -620,13 +622,13 @@ void CMIDX() {
       oledClear();
       break;
     }
-    if (touchUp(Button_DOWN)) {
-      selectSet--;
-      if (selectSet == 255) selectSet = 0;
-    }
     if (touchUp(Button_UP)) {
+      selectSet--;
+      if (selectSet == 255) selectSet = 3;
+    }
+    if (touchUp(Button_DOWN)) {
       selectSet++;
-      if (selectSet > 3) selectSet = 3;
+      if (selectSet > 3) selectSet = 0;
     }
 
     if (selectSet == 0) {
@@ -680,7 +682,7 @@ void CMIDX() {
     lcd_char(1, 10, 15, buff, true, false, false);
     lcd_char(1, 10, 25, "Plan: " + String(x1 + 1), true, false, false);
     lcd_char(1, 10, 35, "ke Plan: " + String(x2 + 1), true, false, false);
-    lcd_char(1, 10, 45, "Gaskan...", true, false, false);
+    lcd_char(1, 10, 45, "OK->", true, false, false);
     if (steps == 1) {
       if (selectModeCM == 0) { // Mode Normal
         oledClear();
@@ -699,12 +701,14 @@ void CMIDX() {
           clrLine[x2][i] = clrLine[x1][i];
           pidProfile[x2][i] = pidProfile[x1][i];
           modeTIM[x2][i] = modeTIM[x1][i];
-          lcd_loading(8, 39, i, true, false, false);
+          lcd_loading(5,  29 , i, true, false, false);
           lcd.display();
           delay(25);
           if (i == 99) {
-            lcd_char(1, 30, 35, "Done Bang...", true, true, true);
-            delay(5000);
+            lcd_char(1, 30, 35, "Plan " + String(x1) + " telah " , true, false , false);
+            lcd_char(1, 40, 35, "ter" + String(mode[selectModeCM]) + " di Plan " + String(x2) + " !!!" , true, false , false);
+            // saveIdxAll();
+            delay(3000);
             doneCM = true;
           }
         }
@@ -737,6 +741,7 @@ void CMIDX() {
           else if (sensLogIdx[x1][i] == 19) sensLogIdx[x2][i] = 18;
           else sensLogIdx[x2][i] = sensLogIdx[x1][i];
           
+
           trigW[x2][i] = trigW[x1][i];
           spdR[x2][i] = spdR[x1][i];
           spdL[x2][i] = spdL[x1][i];
@@ -748,11 +753,12 @@ void CMIDX() {
           clrLine[x2][i] = clrLine[x1][i];
           pidProfile[x2][i] = pidProfile[x1][i];
           modeTIM[x2][i] = modeTIM[x1][i];
-          lcd_loading(8, 39, i, true, false, false);
+          lcd_loading(1, 29, i, true, false, false);
           lcd.display();
           delay(25);
           if (i == 99) {
-            lcd_char(1, 30, 35, "Done Bang...", true, true, true);
+            lcd_char(1, 30, 35, "Plan " + String(x1) + " telah " , true, false, false);
+            lcd_char(1, 40, 35, "ter" + String(mode[selectModeCM]) + " di Plan " + String(x2) + " !!!" , true, false, false);
             saveIdxAll();
             delay(3000);
             doneCM = true;

@@ -1,25 +1,36 @@
 void menu() {
-  countMenu = 0;
+  countMenu = 1;
+  halaman = 0 ;
 
   saveAll();
   delay(10);
   while (1) {
     stopMotor();
-    if (touchUp(Button_MIN) && ((halaman == 0) || (halaman == 1))) {
+    if (touchUp(Button_UP) ) {
+      if (countMenu == 1 && halaman == 0 ) {
+        countMenu = 5;
+        halaman = 1;
+        oledClear();
+      }
+      if (countMenu == 1  && halaman == 1 ) {
+        countMenu = 5;
+        halaman = 0;
+        oledClear();
+      }
       countMenu--;
-      if (countMenu > 4 ) {
-        countMenu = 4;
-        halaman--;
-        if (halaman > 4) halaman = 1;
-      }
     }
-    if (touchUp(Button_UP)&& ((halaman == 0) || (halaman == 1))) {
-      countMenu++;
-      if (countMenu > 4) {
-        countMenu = 1;
-        halaman++; 
-        if (halaman > 1) halaman = 0;
+    if (touchUp(Button_DOWN)) {
+       if (countMenu == 4 && halaman == 0 ) {
+        countMenu = 0;
+        halaman = 1;
+        oledClear();
       }
+      if (countMenu == 4 && halaman == 1 ) {
+        countMenu = 0;
+        halaman = 0;
+        oledClear();
+      }
+      countMenu++;
     }
 
     if (touchUp(Button_RUN)) {
@@ -76,7 +87,7 @@ void menu() {
           byte steps = 0;
           byte speedsR = 0;
           byte speedsL = 0;
-          char Sdirection[2][2] = {"F", "B"};
+          char Sdirection[3][3] = {"F", "B" , "S" };
           byte selectDirectR = 0;
           byte selectDirectL = 0;
           menuCount = 0;
@@ -106,22 +117,22 @@ void menu() {
               }
               if (steps == 1) {
                 lcd_char(1, 65, 30, ">", true, false, false);
-                if (touchUp(Button_PLUS)) {
+                if (touchUp(Button_PLUS )) {
                   selectDirectR++;
-                  if (selectDirectR > 1) selectDirectR = 0;
+                  if (selectDirectR > 2) selectDirectR = 0;
                 }
                 if (touchUp(Button_MIN)) {
                   selectDirectR--;
-                  if (selectDirectR == 255) selectDirectR == 1;
+                  if (selectDirectR == 255) selectDirectR == 2;
                 }
               }
               else if (steps == 2) {
                 lcd_char(1, 65, 40, ">", true, false, false);
-                if (touchUp(Button_PLUS)) {
+                if (touchDown(Button_PLUS , 50)) {
                   speedsR+=5;
                   if (speedsR > 255) speedsR = 255;
                 }
-                if (touchUp(Button_MIN)) {
+                if (touchDown(Button_MIN , 50)) {
                   speedsR-=5;
                   if (speedsR < 0) speedsR == 255;
                 }
@@ -148,20 +159,20 @@ void menu() {
                 lcd_char(1, 0, 30, ">", true, false, false);
                 if (touchUp(Button_PLUS)) {
                   selectDirectL++;
-                  if (selectDirectL > 1) selectDirectL = 0;
+                  if (selectDirectL > 2) selectDirectL = 0;
                 }
                 if (touchUp(Button_MIN)) {
                   selectDirectL--;
-                  if (selectDirectL == 255) selectDirectL == 1;
+                  if (selectDirectL == 255) selectDirectL == 2;
                 }
               }
               else if (steps == 2) {
                 lcd_char(1, 0, 40, ">", true, false, false);
-                if (touchUp(Button_PLUS)) {
+                if (touchDown(Button_PLUS , 50)) {
                   speedsL+=5;
                   if (speedsL > 255) speedsL = 255;
                 }
-                if (touchUp(Button_MIN)) {
+                if (touchDown(Button_MIN , 50)) {
                   speedsL-=5;
                   if (speedsL < 0) speedsL == 255;
                 }
@@ -179,6 +190,9 @@ void menu() {
               lcd_char(1, 2, 17, "MTR Kiri", true, false, false);
             }
             pwmMotor(selectDirectL == 0 ? speedsL : speedsL * -1, selectDirectR == 0 ? speedsR : speedsR * -1);
+            if(selectDirectL == 2)stopMotorL();
+            if(selectDirectR == 2)stopMotorR();
+            
 //            pwmMotor(selectDirectL == 0 ? map2(speedsL, 0, 100, 0, 255) : map2(speedsL, 0, 100, 0, 255) * -1,  selectDirectR == 0 ? map2(speedsR, 0, 100, 0, 255) : map2(speedsR, 0, 100, 0, 255) * -1);
             lcd.display();
           }
@@ -206,13 +220,13 @@ void menu() {
               lcd_char(1, 0, 15, buff, true, false, false);
               lcd_char(1, 20, 35, "Iya ", true, false, false);
               lcd_char(1, 70, 35, "Tidak", true, false, false);
-              if(touchUp(Button_MIN)){
+              if(touchUp(Button_UP)){
                 menuCount++;
-                if(menuCount > 1) menuCount = 1;
+                if(menuCount > 1) menuCount = 0;
               }
-              if(touchUp(Button_UP  )){
+              if(touchUp(Button_DOWN)){
                 menuCount--;
-                if(menuCount == 255) menuCount = 0;
+                if(menuCount == 255) menuCount = 1;
               }
               if(touchUp(Button_PLUS)){
                 if(++selectPlan > 4) selectPlan = 4;
@@ -225,6 +239,7 @@ void menu() {
                 if(touchUp(Button_OK)) steps = 2;
               } else if(menuCount == 0){
                 lcd.drawRoundRect(68, 33, 38, 12, 2, SH110X_WHITE);
+                if(touchUp(Button_OK)) break;
               }
             }
             else if (steps == 2) {

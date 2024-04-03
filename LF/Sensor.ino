@@ -121,11 +121,11 @@ void calibSensor() {
         }
 
         if (_stepsCalib == 0) {
-          if (touchUp(Button_PLUS)) {
+          if (touchDown(Button_PLUS , 50)) {
             sensorSensivity++;
             if (sensorSensivity > 100) sensorSensivity = 0;
           }
-          if (touchUp(Button_MIN)) {
+          if (touchDown(Button_MIN , 50)) {
             sensorSensivity--;
             if (sensorSensivity == 255) sensorSensivity = 100;
           }
@@ -141,8 +141,8 @@ void calibSensor() {
           delayMicroseconds(500);
           while (1) {
             headUp(true, false);
-            lcd_char(1, 2, 16, "Majukno Robotmu", true, false, false);
-            lcd_char(1, 2, 26, "Sampe Kenek Garis", true, false, false);
+            lcd_char(1, 2, 16, "Taruh Robot", true, false, false);
+            lcd_char(1, 2, 26, "diatas Garis", true, false, false);
             lcd_char(1, 2, 36, "Press OK for Save", true, false, false);
             int buffSens = readSensor();
             for (int x = 0; x < MAXSENSOR; x++) {
@@ -192,13 +192,13 @@ void calibSensor() {
           oledClear();
           break;
         }
-        if(touchUp(Button_UP)){
+        if(touchDown(Button_UP , 200)){
           selectSet = 0;
-          if(++countMenu > 14) countMenu = 14;
+          if(++countMenu > 14) countMenu = 1;
         }
-        if(touchUp(Button_DOWN)){
+        if(touchDown(Button_DOWN , 200)){
           selectSet = 0;
-          if(--countMenu < 1 ) countMenu = 1;
+          if(--countMenu < 1 ) countMenu = 14;
         }
         if(touchUp(Button_OK)){
          if(++selectSet > 4 ) selectSet = 1;
@@ -206,22 +206,22 @@ void calibSensor() {
 
         if(selectSet == 1){
           lcd.drawRoundRect(0, 38, 53, 12, 2, SH110X_WHITE);
-          if(touchUp(Button_PLUS)){
+          if(touchDown(Button_PLUS , 100)){
             setMaxVal[countMenu - 1]++;
             if(setMaxVal[countMenu - 1] > 1023) setMaxVal[countMenu - 1] = 1023;
           }
-          if(touchUp(Button_MIN)){
+          if(touchDown(Button_MIN ,  100)){
             setMaxVal[countMenu - 1]--;
             if(setMaxVal[countMenu - 1] < 0) setMaxVal[countMenu - 1] = 0;
           }
         }
         else if(selectSet == 2){
           lcd.drawRoundRect(0, 48, 53, 12, 2, SH110X_WHITE);
-          if(touchUp(Button_PLUS)){
+          if(touchDown(Button_PLUS , 100)){
             setMinVal[countMenu - 1]++;
             if(setMinVal[countMenu - 1] > 1023) setMinVal[countMenu - 1] = 1023;
           }
-          if(touchUp(Button_MIN)){
+          if(touchDown(Button_MIN , 100)){
             setMinVal[countMenu - 1]--;
             if(setMinVal[countMenu - 1] < 0) setMinVal[countMenu - 1] = 0;
           }
@@ -231,11 +231,11 @@ void calibSensor() {
         }
         else if(selectSet == 4){
           lcd.drawRoundRect(56, 48, 65, 12, 2, SH110X_WHITE);
-          if(touchUp(Button_PLUS)){
+          if(touchDown(Button_PLUS , 100)){
             CalAdc[countMenu - 1]++;
             if(CalAdc[countMenu - 1] > 1024) CalAdc[countMenu - 1] = 1024;
           }
-          if(touchUp(Button_MIN)){
+          if(touchDown(Button_MIN , 100)){
             CalAdc[countMenu - 1]--;
             if(CalAdc[countMenu - 1] < 0) CalAdc[countMenu - 1] = 0;
           }

@@ -143,7 +143,7 @@ void headUpIdx(bool clr , bool show) {
 void lcd_loading(int x, int y, int progress, bool text, bool clear, bool display) {
   float bar = ((float)(110 - 1) / 100) * progress;
   if (clear)lcd.clearDisplay();
-  if (text)lcd_char(1, 45, y + 13, "LOADING...", true, false, false);
+  if (text)lcd_char(1, 10, y-10, "LOADING...", true, false, false);
   lcd.drawRoundRect(x, y, 110, 8, 3, SH110X_WHITE);
   lcd.fillRoundRect(x + 2, y + 2, bar, 4, 1, SH110X_WHITE);
   if (display)lcd.display();

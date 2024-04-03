@@ -54,3 +54,13 @@ void stopMotor() {
   ledcWrite(Motor2_A_CH, 0);
   ledcWrite(Motor2_B_CH, 0);
 }
+
+void stopMotorL() {
+  ledcWrite(Motor1_A_CH, 0);
+  ledcWrite(Motor1_B_CH, 0);
+}
+
+void stopMotorR() {
+  ledcWrite(Motor2_A_CH, 0);
+  ledcWrite(Motor2_B_CH, 0);
+}
